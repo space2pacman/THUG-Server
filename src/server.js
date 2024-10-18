@@ -228,6 +228,46 @@ const serverDescription = [
   0
 ];
 
+const p79 = [
+  163,
+60,
+79,
+32,
+0,
+75,
+237,
+111,
+0,
+255,
+255,
+255,
+255,
+0,
+0,
+0,
+0,
+64,
+0,
+0,
+0,
+104,
+235,
+111,
+0,
+8,
+0,
+0,
+0,
+204,
+237,
+111,
+0,
+8,
+1,
+0,
+0
+]
+
 const dgram = require('dgram');
 const server = dgram.createSocket('udp4');
 const Packet = require('./core/Packet');
@@ -249,7 +289,49 @@ server.on('message', (data, info) => {
       server.send(packetEncoded, 0, packetEncoded.length, info.port, info.address);
 
       break;
+    case 3:
+      const packet03 = new Packet([0, 0, 4, 0, 0]);
+      const packetEncoded03 = packet03.encode();
+
+      server.send(packetEncoded03, 0, packetEncoded03.length, info.port, info.address);
+
+      // 79
+      const packet79 = new Packet(p79);
+      const packetEncoded79 = packet79.encode();
+
+      server.send(packetEncoded79, 0, packetEncoded79.length, info.port, info.address);
+
+      break;
   }
 });
+
+//
+//let b = '56ba475a567b965756a69efc55267cfc55';
+
+// 4
+//let b = 'e895ece8e8'
+
+79
+//let b = 'a33cec83a3e84ecca35c5c5c5ca3a3a3a3e3a3a3a3cb48cca3aba3a3a36f4ecca3aba2a3a3'
+
+// 2
+//let b = 'a724a5a3a7a6a7a7a7a6a3a74399a7a7';
+
+// from client
+//let b = '06eb0f04060702069e270606'
+
+let b = '94249690949594949495909405d49894'
+
+let d = []
+for (let i = 0; i < b.length; i += 2) {
+  d.push(Number(`0x${b[i]}${b[i + 1]}`))
+}
+
+const _packet = new Packet(d);
+const decoded = _packet.decode();
+
+for (let i = 0; i < decoded.length; i++) {
+  console.log(decoded[i])
+}
 
 server.bind(5150);
